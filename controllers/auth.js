@@ -3,6 +3,9 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import handleError from "../middleware/error.js";
 
+// Helper function to set the secure attribute based on environment
+const isProduction = process.env.NODE_ENV === "production";
+
 export const signup = async (req, res, next) => {
   try {
     const salt = bcrypt.genSaltSync(10);
@@ -17,6 +20,7 @@ export const signup = async (req, res, next) => {
     res
       .cookie("access_token", token, {
         httpOnly: true,
+        secure: isProduction, // Set secure attribute based on environment
       })
       .status(201)
       .json(otherData);
@@ -41,6 +45,7 @@ export const signin = async (req, res, next) => {
     res
       .cookie("access_token", token, {
         httpOnly: true,
+        secure: isProduction, // Set secure attribute based on environment
       })
       .status(200)
       .json(otherData);
