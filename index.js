@@ -17,7 +17,7 @@ import rootRoutes from "./routes/root.js";
 
 const app = express();
 dotenv.config();
-const PORT = process.env.PORT || 3500;
+const port = process.env.PORT || 3500;
 
 // For ES module path resolution
 const __filename = fileURLToPath(import.meta.url);
@@ -63,7 +63,7 @@ app.use(handleError);
 // MongoDB connection events
 mongoose.connection.once("open", () => {
   console.log("Connected to MongoDB");
-  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+  app.listen(port, () => console.log(`Server running on port ${port}`));
 });
 
 mongoose.connection.on("error", (err) => {
