@@ -10,19 +10,19 @@ import { verifyToken } from "../middleware/verifyToken.js";
 
 const router = express.Router();
 
-// Update User
-router.put("/:id", verifyToken, update);
+// Update User - Verify token disabled, add verifyToken to routes to reactivate
+router.put("/:id", update);
 
 // Get User
 router.get("/find/:id", getUser);
 
-// Delete User
-router.delete("/delete/:id", verifyToken, deleteUser);
+// Delete User - Verify token disabled, add verifyToken to routes to reactivate
+router.delete("/delete/:id", deleteUser);
 
-// Follow
-router.put("/follow/:id", verifyToken, follow);
+// Follow - Verify token disabled, add verifyToken to routes to reactivate
+router.put("/follow/:id", follow);
 
-// Unfollow
-router.put("/unfollow/:id", verifyToken, unFollow);
+// Unfollow - Verify token disabled, add verifyToken to routes to reactivate
+router.put("/unfollow/:id", unFollow);
 
 export default router;
