@@ -11,14 +11,14 @@ import {
 
 const router = express.Router();
 
-// Create a Tweet - Verify token disabled, add verifyToken to routes to reactivate
-router.post("/", createTweet);
+// Create a Tweet - Verify token enabled
+router.post("/", verifyToken, createTweet);
 
-// Delete a Tweet - Verify token disabled, add verifyToken to routes to reactivate
-router.delete("/:id", deleteTweet);
+// Delete a Tweet - Verify token enabled
+router.delete("/:id", verifyToken, deleteTweet);
 
-// Like or Dislike a Tweet
-router.put("/:id/like", likeOrDislike);
+// Like or Dislike a Tweet - Verify token enabled
+router.put("/:id/like", verifyToken, likeOrDislike);
 
 // get all timeline tweets
 router.get("/timeline/:id", getAllTweets);
