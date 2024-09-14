@@ -1,15 +1,20 @@
 import jwt from "jsonwebtoken";
-import handleError from "./error.js";
+import handleError from "../middleware/error.js";
 
 export const verifyToken = (req, res, next) => {
-  const token = req.headers.authorization?.split(" ")[1]; // Bearer <token>
-  if (!token) return next(handleError(401, "You are not authenticated!"));
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token)
+    return next(handleError(401, "Access Denied - You are not authenticated"));
 
-  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-    if (err) return next(handleError(403, "Token is invalid!"));
-    req.user = user;
+  try {
+    const verified = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = verified;
     next();
-  });
+  } catch (err) {
+    if (err.name === "TokenExpiredError") {
+      next(handleError(401, "Token expired"));
+    } else {
+      next(handleError(400, "Invalid token"));
+    }
+  }
 };
-
-export default verifyToken;

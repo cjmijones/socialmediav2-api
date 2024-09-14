@@ -14,9 +14,10 @@ export const signup = async (req, res, next) => {
     const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
+    const tokenExpiry = Date.now() + 3600 * 1000; // 1 hour from now
     const { password, ...otherData } = newUser._doc;
 
-    res.status(201).json({ token, user: otherData });
+    res.status(201).json({ token, tokenExpiry, user: otherData });
   } catch (err) {
     next(err);
   }
@@ -33,9 +34,10 @@ export const signin = async (req, res, next) => {
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
+    const tokenExpiry = Date.now() + 3600 * 1000; // 1 hour from now
     const { password, ...otherData } = user._doc;
 
-    res.status(200).json({ token, user: otherData });
+    res.status(200).json({ token, tokenExpiry, user: otherData });
   } catch (err) {
     next(err);
   }
