@@ -9,11 +9,14 @@ import cors from "cors";
 import corsOptions from "./config/corsOptions.js";
 import connectDB from "./config/dbConn.js";
 import mongoose from "mongoose";
+import cron from "node-cron";
 import { logEvents } from "./middleware/logger.js";
+import { saveNewsArticles } from "./services/newsService.js";
 import authRoutes from "./routes/auths.js";
 import userRoutes from "./routes/users.js";
 import tweetRoutes from "./routes/tweets.js";
 import rootRoutes from "./routes/root.js";
+import articlesRoutes from "./routes/articles.js";
 
 const app = express();
 dotenv.config();
@@ -43,6 +46,7 @@ app.use("/", rootRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/tweets", tweetRoutes);
+app.use("/api/articles", articlesRoutes);
 
 // 404 Handling
 app.all("*", (req, res) => {
@@ -73,3 +77,10 @@ mongoose.connection.on("error", (err) => {
     "mongoErrLog.log"
   );
 });
+
+cron.schedule("0 0,12 * * *", () => {
+  console.log("Fetching and updating news articles...");
+  saveNewsArticles();
+});
+
+saveNewsArticles();

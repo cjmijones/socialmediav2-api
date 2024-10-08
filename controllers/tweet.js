@@ -4,11 +4,21 @@ import handleError from "../middleware/error.js";
 
 // the id in the url is the id of the user NOT the tweet id
 export const createTweet = async (req, res, next) => {
-  const newTweet = new Tweet(req.body);
-  console.log("Createing new tweet");
+  // Extract the description from req.body
+  const { description } = req.body;
+  // Get the userID from the verified token
+  const userID = req.user.id; // Assuming req.user is set by verifyToken middleware
+  // Create a new tweet using the two inputs
+  const tweetObject = {
+    userID,
+    description,
+  };
+  console.log("This is the upcoming user ID", tweetObject);
+
+  const newTweet = new Tweet(tweetObject);
+
   try {
     console.log("Creating new tweet");
-    console.log(req.body);
     const savedTweet = await newTweet.save();
     console.log("Tweet saved");
     res.status(200).json(savedTweet);
@@ -20,8 +30,6 @@ export const createTweet = async (req, res, next) => {
 // the id in the url is the id of the user NOT the tweet id
 export const deleteTweet = async (req, res, next) => {
   const tweet = await Tweet.findById(req.body.tweetId);
-  console.log(tweet);
-  console.log(req.body);
 
   if (tweet.userID === req.user.id) {
     try {
@@ -41,9 +49,11 @@ export const likeOrDislike = async (req, res, next) => {
     const tweet = await Tweet.findById(req.params.id);
     if (!tweet.likes.includes(req.body.id)) {
       await tweet.updateOne({ $push: { likes: req.body.id } });
+      console.log(req.user);
       res.status(200).json("tweet has been liked");
     } else {
       await tweet.updateOne({ $pull: { likes: req.body.id } });
+      console.log(req.user);
       res.status(200).json("tweet has been disliked");
     }
   } catch (err) {
