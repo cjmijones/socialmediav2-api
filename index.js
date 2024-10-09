@@ -40,9 +40,11 @@ app.use(express.json());
 
 // Static file serving
 app.use("/", express.static(path.join(__dirname, "build")));
+app.use("/api/explore", express.static(path.join(__dirname, "build")));
 
 // Routes
 app.use("/", rootRoutes);
+app.use("/api/explore", rootRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/tweets", tweetRoutes);
