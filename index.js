@@ -53,6 +53,7 @@ app.use(handleError);
 
 // 404 Handling
 app.all("*", (req, res) => {
+  console.log("failed 404 request");
   res.status(404);
   console.log("failed 404 request");
   if (req.accepts("html")) {
