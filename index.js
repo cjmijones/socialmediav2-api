@@ -39,7 +39,7 @@ app.use(cors(corsOptions));
 app.use(express.json());
 
 // Static file serving
-app.use("/", express.static(path.join(__dirname, "public")));
+app.use("/", express.static(path.join(__dirname, "build")));
 
 // Routes
 app.use("/", rootRoutes);
@@ -48,19 +48,21 @@ app.use("/api/users", userRoutes);
 app.use("/api/tweets", tweetRoutes);
 app.use("/api/articles", articlesRoutes);
 
-// 404 Handling
-app.all("*", (req, res) => {
-  if (req.accepts("html")) {
-    res.sendFile(path.join(__dirname, "public", "index.html")); // Ensure your React build is in the "public" folder
-  } else if (req.accepts("json")) {
-    res.status(404).json({ message: "404 Not Found" });
-  } else {
-    res.status(404).type("txt").send("404 Not Found");
-  }
-});
-
 // Error handling middleware
 app.use(handleError);
+
+// 404 Handling
+app.all("*", (req, res) => {
+  res.status(404);
+  console.log("failed 404 request");
+  if (req.accepts("html")) {
+    res.sendFile(path.join(__dirname, "views", "404.html"));
+  } else if (req.accepts("json")) {
+    res.json({ message: "404 Not Found v1" });
+  } else {
+    res.type("txt").send("404 Not Found v2");
+  }
+});
 
 // MongoDB connection events
 mongoose.connection.once("open", () => {
