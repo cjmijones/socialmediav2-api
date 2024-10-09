@@ -50,14 +50,12 @@ app.use("/api/articles", articlesRoutes);
 
 // 404 Handling
 app.all("*", (req, res) => {
-  res.status(404);
-  console.log("failed 404 request");
   if (req.accepts("html")) {
-    res.sendFile(path.join(__dirname, "views", "404.html"));
+    res.sendFile(path.join(__dirname, "public", "index.html")); // Ensure your React build is in the "public" folder
   } else if (req.accepts("json")) {
-    res.json({ message: "404 Not Found v1" });
+    res.status(404).json({ message: "404 Not Found" });
   } else {
-    res.type("txt").send("404 Not Found v2");
+    res.status(404).type("txt").send("404 Not Found");
   }
 });
 
